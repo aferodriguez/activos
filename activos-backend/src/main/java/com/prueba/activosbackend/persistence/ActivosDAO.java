@@ -28,6 +28,8 @@ import com.prueba.activosbackend.exception.FechaDeBajaException;
 import com.prueba.activosbackend.exception.ResourceNotFoundException;
 import com.prueba.activosbackend.modelo.Activo;
 
+import javassist.NotFoundException;
+
 /**
  *
  * implementacion de jdbcDaoSupport para aplicar a las operaciones relacionadas
@@ -90,7 +92,7 @@ public class ActivosDAO extends JdbcDaoSupport {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			String dateFormatted = sdf.format(activo.getFecha_compra());
 			java.util.Date datefecha_compra = (java.util.Date) sdf.parse(dateFormatted);
-			
+
 			String dateFormatted1 = sdf.format(activo.getFecha_baja());
 			java.util.Date datefecha_baja;
 
@@ -229,6 +231,7 @@ public class ActivosDAO extends JdbcDaoSupport {
 
 	public void updatefecha(int idActivo, Timestamp fecha_baja) {
 		try {
+
 			List<Activo> activosList = getJdbcTemplate().query("SELECT fecha_compra FROM activo WHERE idactivo = ? ",
 					new Activo(), idActivo);
 			Timestamp fecha_compra = null;
@@ -243,23 +246,34 @@ public class ActivosDAO extends JdbcDaoSupport {
 		}
 	}
 
-	public void updateActivo(Activo activo) throws FechaDeBajaException {
+	public void updateActivo(Activo activo) throws FechaDeBajaException, ResourceNotFoundException {
 		try {
-			List<Activo> activosList = getJdbcTemplate().query("SELECT * FROM activo WHERE idactivo = ? ", new Activo(),
-					activo.getIdActivo());
+
+			String query = "SELECT idactivo,nombre,descripcion,fk_tipo"
+					+ ",serial, numerointernoinventario,peso,alto,ancho,largo"
+					+ ",valor_compra, fecha_compra, fecha_baja, estado+0 estado, color FROM activo where idactivo = ? ";
+			Object pars[] = new Object[1];
+			pars[0] = "1";
+			List<Activo> activosList = getJdbcTemplate().query(query, pars, new Activo());
+			if (activosList.size() == 0) {
+				throw new ResourceNotFoundException();
+			}
 			Activo activoBeforeUpdate = activosList.get(0);
 
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-			String dateFormatted = sdf.format(activo.getFecha_compra());
-			Date datefecha_compra = (Date) sdf.parse(dateFormatted);
+			if (activo.getFecha_baja() != null && activo.getFecha_compra() != null) {
 
-			String dateFormatted1 = sdf.format(activo.getFecha_baja());
-			Date datefecha_baja;
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+				String dateFormatted = sdf.format(activo.getFecha_compra());
+				java.util.Date datefecha_compra = (java.util.Date) sdf.parse(dateFormatted);
 
-			datefecha_baja = (Date) sdf.parse(dateFormatted1);
+				String dateFormatted1 = sdf.format(activo.getFecha_baja());
+				java.util.Date datefecha_baja;
 
-			if (datefecha_baja.before(datefecha_compra)) {
-				throw new FechaDeBajaException();
+				datefecha_baja = (Date) sdf.parse(dateFormatted1);
+
+				if (datefecha_baja.before(datefecha_compra)) {
+					throw new FechaDeBajaException();
+				}
 			}
 
 			Object parameters[] = new Object[15];
@@ -280,8 +294,8 @@ public class ActivosDAO extends JdbcDaoSupport {
 			parameters[14] = activo.getIdActivo();
 
 			getJdbcTemplate().update("UPDATE activo SET nombre = ?, descripcion = ?"
-					+ ", fk_tipo = ?, serial = ?, numerointernoinventario = ?, peso = ?, alto = ? "
-					+ ", largo = ? , valor_compra  = ? , fecha_comrpa = ?, fecha_baja = ?, estado = ?, color = ? WHERE idactivo = ?",
+					+ ", fk_tipo = ?, serial = ?, numerointernoinventario = ?, peso = ?, alto = ?, ancho = ? "
+					+ ", largo = ? , valor_compra  = ? , fecha_compra = ?, fecha_baja = ?, estado = ?, color = ? WHERE idactivo = ?",
 					parameters);
 
 		} catch (ParseException e) {

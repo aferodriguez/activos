@@ -1,0 +1,59 @@
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <section>
+        <header class="header">
+          <div class="row">
+            <div class="col-md-4">
+              <h1>Activos</h1>
+            </div>
+            <div class="col-md-6">
+            </div>
+            <div class="col-md-2">
+            </div>
+          </div>
+        </header>
+      </section>
+      <section class="main">
+        <table class="table" >
+          <thead>
+            <tr>
+              <th>nombre</th>
+              <th>descripcion</th>
+              <th>fk_tipo</th>
+              <th>serial</th>
+              <th>numerointernoinventario</th>
+              <th>peso</th>
+              <th>alto</th>
+              <th>ancho</th>
+              <th>largo</th>
+              <th>valor de compra</th>
+              <th>fecha de compra</th>
+              <th>fecha de baja</th>
+              <th>estado</th>
+              <th>color</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let activo of activos">
+                <th>{{activo.nombre}}</th>
+                <th>{{activo.descripcion}}</th>
+                <th>{{activo.fk_tipo}}</th>
+                <th>{{activo.serial}}</th>
+                <th>{{activo.numerointernoinventario}}</th>
+                <th>{{activo.peso}}</th>
+                <th>{{activo.alto}}</th>
+                <th>{{activo.ancho}}</th>
+                <th>{{activo.largo}}</th>
+                <th>{{activo.valor_compra}}</th>
+                <th>{{activo.fecha_compra}}</th>
+                <th>{{activo.fecha_baja}}</th>
+                <th>{{activo.estado}}</th>
+                <th>{{activo.color}}</th>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+    </div>
+  </div>
+</div>

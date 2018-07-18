@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
+
 import com.prueba.activosbackend.exception.FechaDeBajaException;
 import com.prueba.activosbackend.exception.ResourceNotFoundException;
 import com.prueba.activosbackend.modelo.Activo;
@@ -71,7 +71,7 @@ public class ActivosController {
 	 *         cuando existen activos. en caso de que no se encuentren documentos en
 	 *         el sistema se retorna un mensaje y el codigo 404
 	 **/
-	@CrossOrigin(origins="*")
+	@CrossOrigin(origins = "*")
 	@RequestMapping(value = "/Activos", method = RequestMethod.GET)
 	public ResponseEntity get(@RequestParam(value = "tipo", required = false) String tipo,
 			@RequestParam(value = "fecha_compra", required = false) String fecha_compra,
@@ -162,6 +162,10 @@ public class ActivosController {
 			activosDAO.updateActivo(activo);
 			logger.info("Se actualizo exitosamente el objeto: " + activo.toString());
 			return ResponseEntity.status(HttpStatus.OK).body("Se actualizo correctamente el registro");
+		} catch (ResourceNotFoundException e) {
+			logger.error("No se encontraron activos para el ID ingresado");
+			return ResponseEntity.status(HttpStatus.FORBIDDEN)
+					.body("No se encontraron activos para el ID ingresado");
 		} catch (FechaDeBajaException e) {
 			logger.error("la fecha de baja debe ser mayor a la fecha de compra");
 			return ResponseEntity.status(HttpStatus.FORBIDDEN)
@@ -170,7 +174,12 @@ public class ActivosController {
 			logger.error("Ocurrio un error al intentar conectarse a la base de datos.", e.getStackTrace());
 			return ResponseEntity.status(HttpStatus.GATEWAY_TIMEOUT)
 					.body("Ocurrio un error al intentar conectarse a la base de datos.");
-		} catch (Exception e) {
+		}catch( DataIntegrityViolationException  e) {
+			logger.error("Es necesario diligenciar todos los atributos", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).
+					body("Es necesario diligenciar todos los atributos");
+
+		}catch(Exception e) {
 			logger.error("ocurrio un error en el servidor.", e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}

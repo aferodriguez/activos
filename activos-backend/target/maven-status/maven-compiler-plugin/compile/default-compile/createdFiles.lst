@@ -1,0 +1,7 @@
+com\prueba\activosbackend\ActivosBackendApplication.class
+com\prueba\activosbackend\modelo\Activo.class
+com\prueba\activosbackend\persistence\ActivosDAO.class
+com\prueba\activosbackend\base\rest\ActivosController.class
+com\prueba\activosbackend\exception\ResourceNotFoundException.class
+com\prueba\activosbackend\modelo\CustomDateSerializer.class
+com\prueba\activosbackend\exception\FechaDeBajaException.class

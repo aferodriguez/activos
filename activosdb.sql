@@ -3,9 +3,10 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 17-07-2018 a las 05:26:23
+-- Tiempo de generación: 18-07-2018 a las 22:42:22
 -- Versión del servidor: 10.1.19-MariaDB
 -- Versión de PHP: 5.6.28
+
 DROP DATABASE IF EXISTS activosdb;
 
 CREATE DATABASE activosdb;
@@ -56,7 +57,7 @@ CREATE TABLE `activo` (
 --
 
 INSERT INTO `activo` (`idactivo`, `nombre`, `descripcion`, `fk_tipo`, `serial`, `numerointernoinventario`, `peso`, `alto`, `ancho`, `largo`, `valor_compra`, `fecha_compra`, `fecha_baja`, `estado`, `color`) VALUES
-(12, 'Edificio Atagrama', 'Edificio de Oficinas operativas', 1, 'INM-0001', 12, 1000, 7, 10, 100, 400000000, '2018-07-16 17:04:20', '2018-07-10 05:04:26', 'activo', 'Verde');
+(1, 'Edificio Atagrama', 'Edificio de Oficinas operativas', 1, 'INM-0001', 12, 2.1, 2.1, 3.1, 5.8, 500000, '2018-07-17 00:00:00', NULL, 'activo', 'Verde');
 
 -- --------------------------------------------------------
 
@@ -163,9 +164,14 @@ CREATE TABLE `tipo_activo` (
 --
 
 INSERT INTO `tipo_activo` (`id`, `nombre`) VALUES
-(1, 'Bienes Inmuebles'),
-(2, 'Maquinaria'),
-(3, 'Material de oficina');
+(1, 'Terrenos y bienes naturales'),
+(2, 'Construcciones'),
+(3, 'Instalaciones técnicas'),
+(4, 'Maquinaria'),
+(5, 'Mobiliario'),
+(6, 'Equipos para procesos informaticos'),
+(7, 'Elementos de transporte'),
+(8, 'Otros');
 
 --
 -- Índices para tablas volcadas
@@ -244,7 +250,7 @@ ALTER TABLE `tipo_activo`
 -- AUTO_INCREMENT de la tabla `activo`
 --
 ALTER TABLE `activo`
-  MODIFY `idactivo` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `idactivo` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT de la tabla `area`
 --
@@ -284,7 +290,7 @@ ALTER TABLE `rel_area_ciudad`
 -- AUTO_INCREMENT de la tabla `tipo_activo`
 --
 ALTER TABLE `tipo_activo`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 --
 -- Restricciones para tablas volcadas
 --
@@ -293,7 +299,7 @@ ALTER TABLE `tipo_activo`
 -- Filtros para la tabla `activo`
 --
 ALTER TABLE `activo`
-  ADD CONSTRAINT `activo_ibfk_1` FOREIGN KEY (`fk_tipo`) REFERENCES `tipo_activo` (`id`);
+  ADD CONSTRAINT `activo_ibfk_1` FOREIGN KEY (`fk_tipo`) REFERENCES `tipo_activo` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Filtros para la tabla `ciudad`
