@@ -1,5 +1,10 @@
 package com.prueba.activosbackend.persistence;
 
+import java.sql.Date;
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -19,6 +24,7 @@ import org.springframework.jdbc.core.support.JdbcDaoSupport;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import com.prueba.activosbackend.exception.FechaDeBajaException;
 import com.prueba.activosbackend.exception.ResourceNotFoundException;
 import com.prueba.activosbackend.modelo.Activo;
 
@@ -78,9 +84,21 @@ public class ActivosDAO extends JdbcDaoSupport {
 	 * 
 	 * @return ResonseEntity
 	 */
-	public ResponseEntity<String> insert(@RequestBody Activo activo) throws Exception {
+	public ResponseEntity<String> insert(@RequestBody Activo activo)
+			throws Exception, FechaDeBajaException, ParseException {
 		try {
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			String dateFormatted = sdf.format(activo.getFecha_compra());
+			java.util.Date datefecha_compra = (java.util.Date) sdf.parse(dateFormatted);
+			
+			String dateFormatted1 = sdf.format(activo.getFecha_baja());
+			java.util.Date datefecha_baja;
 
+			datefecha_baja = (java.util.Date) sdf.parse(dateFormatted1);
+
+			if (datefecha_baja.before(datefecha_compra)) {
+				throw new FechaDeBajaException();
+			}
 			getJdbcTemplate().update("INSERT into activo (nombre,descripcion,fk_tipo,serial,numerointernoinventario,"
 					+ "peso,alto,ancho,largo,valor_compra,fecha_compra,fecha_baja,estado,color) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
 					activo.getNombre(), activo.getDescripcion(), activo.getTipo(), activo.getSerial(),
@@ -94,6 +112,11 @@ public class ActivosDAO extends JdbcDaoSupport {
 			throw new CannotGetJdbcConnectionException(e.getStackTrace().toString());
 		} catch (DataIntegrityViolationException e) {
 			throw new DataIntegrityViolationException(e.getStackTrace().toString());
+		} catch (FechaDeBajaException e) {
+			throw new FechaDeBajaException();
+		} catch (ParseException e) {
+			e.printStackTrace();
+			throw new Exception();
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new Exception();
@@ -191,12 +214,82 @@ public class ActivosDAO extends JdbcDaoSupport {
 			throw new CannotGetJdbcConnectionException(e.getStackTrace().toString());
 		}
 	}
+
 	/**
 	 * Permite actualizar el serial interno
 	 *
 	 **/
-	public void updateId(int idActivo, String serial ) {
-		getJdbcTemplate().update("UPDATE TABLE activo SET serial = ? WHERE idactivo = ? ",idActivo,serial);
+	public void updateSerial(int idActivo, String serial) {
+		try {
+			getJdbcTemplate().update("UPDATE TABLE activo SET serial = ? WHERE idactivo = ? ", idActivo, serial);
+		} catch (CannotGetJdbcConnectionException e) {
+			throw new CannotGetJdbcConnectionException(e.getStackTrace().toString());
+		}
+	}
+
+	public void updatefecha(int idActivo, Timestamp fecha_baja) {
+		try {
+			List<Activo> activosList = getJdbcTemplate().query("SELECT fecha_compra FROM activo WHERE idactivo = ? ",
+					new Activo(), idActivo);
+			Timestamp fecha_compra = null;
+
+			for (Activo activo : activosList) {
+				fecha_compra = activo.getFecha_compra();
+			}
+
+			getJdbcTemplate().update("UPDATE TABLE activo SET fecha_baja  = ? WHERE idactivo");
+		} catch (CannotGetJdbcConnectionException e) {
+			throw new CannotGetJdbcConnectionException(e.getStackTrace().toString());
+		}
+	}
+
+	public void updateActivo(Activo activo) throws FechaDeBajaException {
+		try {
+			List<Activo> activosList = getJdbcTemplate().query("SELECT * FROM activo WHERE idactivo = ? ", new Activo(),
+					activo.getIdActivo());
+			Activo activoBeforeUpdate = activosList.get(0);
+
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			String dateFormatted = sdf.format(activo.getFecha_compra());
+			Date datefecha_compra = (Date) sdf.parse(dateFormatted);
+
+			String dateFormatted1 = sdf.format(activo.getFecha_baja());
+			Date datefecha_baja;
+
+			datefecha_baja = (Date) sdf.parse(dateFormatted1);
+
+			if (datefecha_baja.before(datefecha_compra)) {
+				throw new FechaDeBajaException();
+			}
+
+			Object parameters[] = new Object[15];
+			parameters[0] = activo.getNombre();
+			parameters[1] = activo.getDescripcion();
+			parameters[2] = activo.getTipo();
+			parameters[3] = activo.getSerial();
+			parameters[4] = activo.getNumerointernoinventario();
+			parameters[5] = activo.getPeso();
+			parameters[6] = activo.getAlto();
+			parameters[7] = activo.getAncho();
+			parameters[8] = activo.getLargo();
+			parameters[9] = activo.getValor_compra();
+			parameters[10] = activo.getFecha_compra();
+			parameters[11] = activo.getFecha_baja();
+			parameters[12] = activo.getEstado();
+			parameters[13] = activo.getColor();
+			parameters[14] = activo.getIdActivo();
+
+			getJdbcTemplate().update("UPDATE activo SET nombre = ?, descripcion = ?"
+					+ ", fk_tipo = ?, serial = ?, numerointernoinventario = ?, peso = ?, alto = ? "
+					+ ", largo = ? , valor_compra  = ? , fecha_comrpa = ?, fecha_baja = ?, estado = ?, color = ? WHERE idactivo = ?",
+					parameters);
+
+		} catch (ParseException e) {
+			e.printStackTrace();
+		} catch (CannotGetJdbcConnectionException e) {
+			throw new CannotGetJdbcConnectionException(e.getStackTrace().toString());
+		}
+
 	}
 
 }

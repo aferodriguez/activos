@@ -1,0 +1,183 @@
+swagger: "2.0"
+info:
+  description: ""
+  version: "API de Activos"
+  title: "1.0.0"
+  termsOfService: "http://swagger.io/terms/"
+  contact:
+   email: "aferca@hotmail.es"
+host: "localhost:8080"
+basePath: "/v2"
+tags:
+- name: "activos-backend"
+  description: "Gestión sobre los activos"
+schemes:
+- "https"
+- "http"
+paths:
+  /activo:
+    get:
+      summary: "Si no se envian parametros retorna una lista de todos los Activos de lo contrario, permite obtener un activo por su numero de serial, por la fecha de compra o por el id del tipo de activo. Permite hacer busquedas por cada parametro  de manera independiente o por la combinacion de cualquiera de ellos."
+      description: " "
+      operationId: "getActivosBySerial"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "query"
+        name: "serial"
+        required: false
+        description: "Serial por el que se desea buscar un activo."
+      - in: "query"
+        name: "fecha_compra"
+        required: false
+        type: "string"
+        format: "yyyy-MM-dddd"
+        description: "Fecha en que se realizo la compra del activo."
+      - in: "query"
+        name: "tipo"
+        required: false
+        type: "integer"
+        items:
+          type: "integer"
+          enum:
+          - "1 - Terrenos y bienes naturales."
+          - "2 - Construcciones."
+          - "3 - Instalaciones técnicas"
+          - "4 - Maquinaria"
+          - "5 - Mobiliario"
+          - "6 - Equipos para procesos informaticos"
+          - "7 - Elementos de transporte"
+          - "8 - Otros"
+        description: "ID del tipo de activo que se quiere crear" 
+      responses:
+          200:
+            description: "operacion correcta."
+            schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/activo"
+            
+          404:
+            description: "No se han encontrado Activos en el Sistema."
+          500:
+            description: "Ocurrio un error en el servidor."
+          504:
+            description: "Ocurrio un error al intentar conectarse a la base de datos."
+    post:
+      summary: "Agrega un nuevo activo."
+      description: " "
+      operationId: "insertActivos"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        description: "Objeto activo que necesita ser guardado"
+        schema:
+         type: "array"
+         items:
+         $ref: "#/definitions/activoupdate"
+      responses:
+         
+          201:
+            description: "Activo creado exitosamente."
+          400:
+            description: "El número de inventario: {numeroinventario} ya fue utilizado."
+          403:
+            description: "La fecha de baja debe ser mayor a la fecha de compra"
+          406:
+            description: "Hace falta diligenciar un campo del activo."
+          500:
+            description: "Ocurrio un error en el servidor."
+          504:
+            description: "Ocurrio un error al intentar conectarse a la base de datos." 
+    put:
+      summary: "Actualizar un nuevo activo."
+      description: " "
+      operationId: "updateActivos"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        description: "Objeto activo a actualizar"
+        schema:
+         type: "array"
+         items:
+         $ref: "#/definitions/activoupdate"
+      responses:
+         
+          200:
+            description: "Se actualizo exitosamente el objeto"
+          403:
+            description: "La fecha de baja debe ser mayor a la fecha de compra"
+          500:
+            description: "Ocurrio un error en el servidor."
+          504:
+            description: "Ocurrio un error al intentar conectarse a la base de datos."        
+definitions:
+  activo:
+    type: "object"
+    properties:
+      idactivo:
+        type: "integer"
+        format: "int64"
+      nombre:
+        type: "string"
+      descripcion:
+        type: "string"
+      fk_tipo:
+        type: "integer"
+      serial:
+        type: "string"
+      numerointernoinventario:
+        type: "string"
+      peso: 
+        type: "number"
+      alto:  
+        type: "number"
+      valor_compra:
+        type: "number"
+      fecha_compra:
+        type: "string"
+      fecha_baja:
+        type: "string"
+      estado:
+        type: "integer"
+      color:
+        type: "string"
+  activoupdate:
+    type: "object"
+    properties:
+      nombre:
+        type: "string"
+      descripcion:
+        type: "string"
+      fk_tipo:
+        type: "integer"
+      serial:
+        type: "string"
+      numerointernoinventario:
+        type: "string"
+      peso: 
+        type: "number"
+      alto:  
+        type: "number"
+      valor_compra:
+        type: "number"
+      fecha_compra:
+        type: "string"
+      fecha_baja:
+        type: "string"
+      estado:
+        type: "integer"
+      color:
+        type: "string"      

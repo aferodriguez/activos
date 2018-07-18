@@ -1,0 +1,164 @@
+{
+	"id": "592c8066-26c4-6021-0901-c5cbcf76a7eb",
+	"name": "pruebas API Activos",
+	"description": "Esta API contiene los consumos de prueba al API de activos",
+	"order": [
+		"ea28af32-14f7-8a5f-437e-d8fa7c0f15d5",
+		"a47ccf68-390a-045b-82ca-ff36db980c20",
+		"7289a18e-0edb-5f8b-a8fd-98b8ac2f3c02",
+		"12f88187-d344-5bcc-3507-4c92c2059480"
+	],
+	"folders": [],
+	"folders_order": [],
+	"timestamp": 1531853341037,
+	"owner": "2684146",
+	"public": false,
+	"requests": [
+		{
+			"id": "12f88187-d344-5bcc-3507-4c92c2059480",
+			"headers": "",
+			"headerData": [],
+			"url": "localhost:8080/Activos?serial=INM-0001",
+			"queryParams": [
+				{
+					"key": "serial",
+					"value": "INM-0001",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"pathVariables": {},
+			"pathVariableData": [],
+			"preRequestScript": null,
+			"method": "GET",
+			"collectionId": "592c8066-26c4-6021-0901-c5cbcf76a7eb",
+			"data": null,
+			"dataMode": "params",
+			"name": "localhost:8080/Activos?serial=INM-0001",
+			"description": "Obtener los activos por el filtro de serial.",
+			"descriptionFormat": "html",
+			"time": 1531879962584,
+			"version": 2,
+			"responses": [],
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {}
+		},
+		{
+			"id": "7289a18e-0edb-5f8b-a8fd-98b8ac2f3c02",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "localhost:8080/Activos",
+			"queryParams": [],
+			"pathVariables": {},
+			"pathVariableData": [],
+			"preRequestScript": null,
+			"method": "PUT",
+			"collectionId": "592c8066-26c4-6021-0901-c5cbcf76a7eb",
+			"data": [],
+			"dataMode": "raw",
+			"name": "localhost:8080/Activos",
+			"description": "Petición de actualización de un activo",
+			"descriptionFormat": "html",
+			"time": 1531879730762,
+			"version": 2,
+			"responses": [],
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"rawModeData": "    {\n        \"nombre\": \"Edificio Atagrama\",\n        \"descripcion\": \"Edificio de Oficinas operativas\",\n        \"numerointernoinventario\": 13,\n        \"alto\": 2.1,\n        \"ancho\": 3.1,\n        \"largo\": 5.8,\n        \"valor_compra\": 500000,\n        \"fecha_compra\": \"2018-07-17\",\n        \"fecha_baja\":null,\n        \"estado\": 1,\n        \"color\": \"Verde\",\n        \"peso\": 2.1,\n        \"tipo\": \"1\",\n        \"idActivo\": 4\n    }"
+		},
+		{
+			"id": "a47ccf68-390a-045b-82ca-ff36db980c20",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "localhost:8080/Activos",
+			"queryParams": [],
+			"pathVariables": {},
+			"pathVariableData": [],
+			"preRequestScript": null,
+			"method": "POST",
+			"collectionId": "592c8066-26c4-6021-0901-c5cbcf76a7eb",
+			"data": [],
+			"dataMode": "raw",
+			"name": "localhost:8080/Activos",
+			"description": "Petición de inserción de activo en base de datos.",
+			"descriptionFormat": "html",
+			"time": 1531879656632,
+			"version": 2,
+			"responses": [],
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"rawModeData": "    {\n        \"nombre\": \"Edificio Atagrama\",\n        \"descripcion\": \"Edificio de Oficinas operativas\",\n        \"numerointernoinventario\": 13,\n        \"alto\": 2.13,\n        \"ancho\": 3.4,\n        \"largo\": 5.5,\n        \"valor_compra\": 500000,\n        \"fecha_compra\": \"2018-07-17\",\n        \"fecha_baja\":null,\n        \"estado\": 1,\n        \"color\": \"Verde\",\n        \"peso\": 2.1,\n        \"tipo\": \"1\",\n        \"idActivo\": 4\n    }"
+		},
+		{
+			"id": "ea28af32-14f7-8a5f-437e-d8fa7c0f15d5",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "localhost:8080/Activos?serial=INM-0001&tipo=1&fecha_compra=2018-07-16",
+			"queryParams": [
+				{
+					"key": "serial",
+					"value": "INM-0001",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "tipo",
+					"value": "1",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "fecha_compra",
+					"value": "2018-07-16",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"pathVariables": {},
+			"pathVariableData": [],
+			"preRequestScript": null,
+			"method": "GET",
+			"collectionId": "592c8066-26c4-6021-0901-c5cbcf76a7eb",
+			"data": [],
+			"dataMode": "raw",
+			"name": "localhost:8080/Activos?serial=INM-0001&tipo=1&fecha_compra=2018-07-16",
+			"description": "Petición GET con 3 filtros de busqueda: serial,fecha_compra,tipo",
+			"descriptionFormat": "html",
+			"time": 1531853438181,
+			"version": 2,
+			"responses": [],
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"rawModeData": "{\n\t\"nombre\":\"a\",\n\t\"email\":\"aaa@aaa.aaa\"\n}"
+		}
+	]
+}
