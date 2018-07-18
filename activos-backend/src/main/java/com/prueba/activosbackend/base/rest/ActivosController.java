@@ -11,6 +11,7 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.CannotGetJdbcConnectionException;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -70,6 +71,7 @@ public class ActivosController {
 	 *         cuando existen activos. en caso de que no se encuentren documentos en
 	 *         el sistema se retorna un mensaje y el codigo 404
 	 **/
+	@CrossOrigin(origins="*")
 	@RequestMapping(value = "/Activos", method = RequestMethod.GET)
 	public ResponseEntity get(@RequestParam(value = "tipo", required = false) String tipo,
 			@RequestParam(value = "fecha_compra", required = false) String fecha_compra,
